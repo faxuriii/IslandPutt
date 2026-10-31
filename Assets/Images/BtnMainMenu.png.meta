@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: cb0b1fbf7ff9bff4f81631e122c74a68
+guid: 920f0242ead530843ade8e77e914f3d0
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3123481429485419530
-    second: BtnMainMenu_0
+      213: 7729115520025158685
+    second: island_putt_transparente_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -57,8 +57,8 @@ TextureImporter:
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationMethod: 0
-  spriteTessellationDetail: 0
-  spriteGeometrySubdivision: 0
+  spriteTessellationDetail: -1
+  spriteGeometrySubdivision: -1
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
@@ -115,23 +115,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BtnMainMenu_0
+      name: island_putt_transparente_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1672
-        height: 941
+        width: 1269
+        height: 539
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: 0
+      tessellationDetail: -1
       bones: []
-      spriteID: 6f30ef4503a27a4d0800000000000000
-      internalID: -3123481429485419530
+      spriteID: d14ee076d95534b60800000000000000
+      internalID: 7729115520025158685
       vertices: []
       indices: 
       edges: []
@@ -150,7 +150,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      BtnMainMenu_0: -3123481429485419530
+      island_putt_transparente_0: 7729115520025158685
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
