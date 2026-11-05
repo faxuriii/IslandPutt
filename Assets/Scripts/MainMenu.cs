@@ -3,9 +3,22 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
+    public GameObject settingsMenu;
+    public GameObject mainMenu;
+
+    public void OpenSettingsMenu()
+    {
+        settingsMenu.SetActive(true);
+        mainMenu.SetActive(false);
+    }
+
     public void QuitGame()
     {
         Application.Quit();
+
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #endif
     }
 
     public void PlayGame()
