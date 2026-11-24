@@ -77,6 +77,7 @@ public class CameraFollow : MonoBehaviour
 
     void LateUpdate()
     {
+        if (Time.timeScale == 0f) return;
         var kb = Keyboard.current;
         var mouse = Mouse.current;
         if (kb == null || mouse == null) return;

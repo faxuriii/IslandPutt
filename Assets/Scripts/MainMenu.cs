@@ -7,6 +7,20 @@ public class MainMenu : MonoBehaviour
     public GameObject mainMenu;
 
     MapSelector selector;
+    static bool abrirSelectorAlEntrar;
+
+    public static void CargarSelector()
+    {
+        abrirSelectorAlEntrar = true;
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    void Start()
+    {
+        if (!abrirSelectorAlEntrar) return;
+        abrirSelectorAlEntrar = false;
+        PlayGame();
+    }
 
     public void OpenSettingsMenu()
     {

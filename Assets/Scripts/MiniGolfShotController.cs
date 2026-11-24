@@ -129,6 +129,8 @@ public class MiniGolfShotController : MonoBehaviour
     bool chargingWithMouse;
     int strokes;
     Vector3 lastShotPosition;
+    float lastShotYaw;
+    bool canUndoShot;
     Vector3 prevPhysicsPos;
     Collider ownCollider;
 
@@ -148,6 +150,8 @@ public class MiniGolfShotController : MonoBehaviour
     {
         powerGradient = DefaultGradient();
     }
+
+    DesertPauseMenu pauseMenu;
 
     void Awake()
     {
@@ -182,6 +186,15 @@ public class MiniGolfShotController : MonoBehaviour
         CrearEstela();
         hud = gameObject.AddComponent<GolfHUD>();
         hud.Init(uiFont, powerGradient, par);
+
+        if (gameObject.scene.name == "IslandDesert")
+        {
+            var pauseRoot = new GameObject("IslandDesert Pause Menu", typeof(RectTransform));
+            UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(pauseRoot, gameObject.scene);
+            pauseRoot.transform.SetParent(transform, false);
+            pauseMenu = pauseRoot.AddComponent<DesertPauseMenu>();
+            pauseMenu.Init(this, hud);
+        }
     }
 
     void Start()
@@ -198,6 +211,7 @@ public class MiniGolfShotController : MonoBehaviour
         rb.position = p;
         transform.position = p;
         lastShotPosition = p;
+        canUndoShot = false;
         prevPhysicsPos = p;
         isMoving = false;
         isCharging = false;
@@ -233,10 +247,11 @@ public class MiniGolfShotController : MonoBehaviour
             yield return null;
         }
         transform.position = hasta;
-        if (hud != null) hud.OnHole(strokes, hoyo.position, radius);
+        string resultado = hud.OnHole(strokes, hoyo.position, radius);
 
         yield return new WaitForSeconds(tiempoTrasHoyo);
-        ReiniciarHoyo();
+        if (pauseMenu != null) pauseMenu.ShowResults(resultado, strokes, par);
+        else ReiniciarHoyo();
     }
 
     public void ReiniciarHoyo()
@@ -249,9 +264,18 @@ public class MiniGolfShotController : MonoBehaviour
         ColocarEnSalida();
     }
 
+    public void CancelChargeForPause()
+    {
+        if (!isCharging) return;
+        isCharging = false;
+        power = 0f;
+        hud.CancelCharge();
+    }
+
     void Update()
     {
-        if (Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame)
+        if (pauseMenu != null && pauseMenu.CapturesGameplay) return;
+        if (!Embocada && Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame)
             ReiniciarHoyo();
 
         if (Embocada)
@@ -261,9 +285,21 @@ public class MiniGolfShotController : MonoBehaviour
             return;
         }
 
+        if (canUndoShot && Keyboard.current?.zKey.wasPressedThisFrame == true)
+        {
+            ResetToLastShot(0f);
+            aimYaw = lastShotYaw;
+            canUndoShot = false;
+            strokes--;
+            hud.CancelCharge();
+            hud.SetGolpes(strokes, true);
+            UpdateArrow();
+            return;
+        }
+
         // ¿Se ha caído del mapa?
         if (transform.position.y < alturaMuerte)
-            ResetToLastShot();
+            ResetToLastShot(radius * 0.2f);
 
         if (isMoving)
         {
@@ -396,7 +432,9 @@ public class MiniGolfShotController : MonoBehaviour
         var kb = Keyboard.current;
         var mouse = Mouse.current;
 
-        bool pressed  = (mouse != null && mouse.leftButton.wasPressedThisFrame) || (kb != null && kb.spaceKey.wasPressedThisFrame);
+        bool mousePressed = mouse != null && mouse.leftButton.wasPressedThisFrame &&
+            (pauseMenu == null || !pauseMenu.PointerOverPauseButton());
+        bool pressed  = mousePressed || (kb != null && kb.spaceKey.wasPressedThisFrame);
         bool held     = (mouse != null && mouse.leftButton.isPressed)           || (kb != null && kb.spaceKey.isPressed);
         bool released = (mouse != null && mouse.leftButton.wasReleasedThisFrame) || (kb != null && kb.spaceKey.wasReleasedThisFrame);
         bool cancel   = (mouse != null && mouse.rightButton.wasPressedThisFrame) || (kb != null && kb.escapeKey.wasPressedThisFrame);
@@ -407,7 +445,7 @@ public class MiniGolfShotController : MonoBehaviour
             chargeTime = 0f;
             power = 0f;
             dragPixels = 0f;
-            chargingWithMouse = mouse != null && mouse.leftButton.wasPressedThisFrame;
+            chargingWithMouse = mousePressed;
         }
 
         if (!isCharging) return;
@@ -439,7 +477,8 @@ public class MiniGolfShotController : MonoBehaviour
 
         if (released || !held)
         {
-            if (power >= fuerzaMinimaTiro) Shoot(power);
+            bool releasingOverPause = chargingWithMouse && pauseMenu != null && pauseMenu.PointerOverPauseButton();
+            if (!releasingOverPause && power >= fuerzaMinimaTiro) Shoot(power);
             isCharging = false;
             power = 0f;
         }
@@ -447,7 +486,9 @@ public class MiniGolfShotController : MonoBehaviour
 
     void Shoot(float p)
     {
-        lastShotPosition = transform.position;
+        lastShotPosition = rb.position;
+        lastShotYaw = aimYaw;
+        canUndoShot = true;
         strokes++;
 
         rb.WakeUp();
@@ -507,14 +548,15 @@ public class MiniGolfShotController : MonoBehaviour
         prevPhysicsPos = rb.position;
     }
 
-    void ResetToLastShot()
+    void ResetToLastShot(float lift)
     {
         rb.isKinematic = false;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        rb.position = lastShotPosition + Vector3.up * radius * 0.2f;
+        rb.position = lastShotPosition + Vector3.up * lift;
         transform.position = rb.position;
         prevPhysicsPos = rb.position;
+        if (trail != null) { trail.emitting = false; trail.Clear(); }
         isMoving = false;
         isCharging = false;
         power = 0f;

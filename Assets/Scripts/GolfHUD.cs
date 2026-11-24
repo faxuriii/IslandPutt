@@ -15,6 +15,13 @@ public class GolfHUD : MonoBehaviour
     public Gradient gradiente;
     [Range(0f, 1f)] public float volumen = 0.7f;
 
+    public void CancelCharge()
+    {
+        charging = false;
+        powerShown = 0f;
+        ultimoTick = 0f;
+    }
+
     // --- UI
     RectTransform powerPanel, powerFill, golpesPill, mensaje, subMensaje;
     Image powerFillImg, golpesImg;
@@ -100,7 +107,7 @@ public class GolfHUD : MonoBehaviour
         if (fuerza > 15f) CameraFollow.Shake(Mathf.Clamp01(fuerza / 60f) * 0.5f);
     }
 
-    public void OnHole(int golpes, Vector3 hoyoPos, float radio)
+    public string OnHole(int golpes, Vector3 hoyoPos, float radio)
     {
         audioSrc.PlayOneShot(clipHoyo, volumen);
         StartCoroutine(Fanfarria(0.25f));
@@ -122,6 +129,7 @@ public class GolfHUD : MonoBehaviour
 
         StopCoroutine(nameof(AnimMensaje));
         StartCoroutine(AnimMensaje(titulo, sub, c));
+        return titulo;
     }
 
     public void OnReset()
@@ -136,7 +144,7 @@ public class GolfHUD : MonoBehaviour
 
     void Update()
     {
-        if (powerPanel == null) return;
+        if (powerPanel == null || Time.timeScale == 0f) return;
         float dt = Time.unscaledDeltaTime;
 
         // Barra visible al cargar, se desvanece después
@@ -174,7 +182,7 @@ public class GolfHUD : MonoBehaviour
 
     // =============================== UI ===============================
 
-    void SetGolpes(int g, bool animar)
+    public void SetGolpes(int g, bool animar)
     {
         golpesTxt.text = "GOLPES  " + g;
         golpesImg.color = ColorGolpes(g);
@@ -276,7 +284,7 @@ public class GolfHUD : MonoBehaviour
         float t = 0f;
         while (t < 0.6f)
         {
-            t += Time.unscaledDeltaTime;
+            t += Time.deltaTime;
             float k = Mathf.Clamp01(t / 0.6f);
             float s = ElasticOut(k);
             mensaje.localScale = Vector3.one * s;
