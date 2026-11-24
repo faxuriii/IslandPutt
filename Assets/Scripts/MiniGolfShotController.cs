@@ -131,7 +131,6 @@ public class MiniGolfShotController : MonoBehaviour
     Vector3 lastShotPosition;
     float lastShotYaw;
     bool canUndoShot;
-    Vector3 prevPhysicsPos;
     Collider ownCollider;
 
     public float Radio => radius;
@@ -212,7 +211,6 @@ public class MiniGolfShotController : MonoBehaviour
         transform.position = p;
         lastShotPosition = p;
         canUndoShot = false;
-        prevPhysicsPos = p;
         isMoving = false;
         isCharging = false;
         power = 0f;
@@ -333,9 +331,7 @@ public class MiniGolfShotController : MonoBehaviour
             isMoving = true;
             slowTimer = 0f; shotTimer = 0f; stuckTimer = 0f;
         }
-        if (!isMoving || Embocada) { prevPhysicsPos = rb.position; return; }
-
-        PreventTunneling();
+        if (!isMoving || Embocada) return;
 
         float dt = Time.fixedDeltaTime;
         shotTimer += dt;
@@ -492,7 +488,6 @@ public class MiniGolfShotController : MonoBehaviour
         strokes++;
 
         rb.WakeUp();
-        prevPhysicsPos = rb.position;
         float speed = Mathf.Lerp(velocidadTiroMin, velocidadTiroMax, Mathf.Pow(p, curvaFuerza));
         rb.AddForce(AimDirection * speed, ForceMode.VelocityChange);
 
@@ -514,40 +509,6 @@ public class MiniGolfShotController : MonoBehaviour
         stuckTimer = 0f;
     }
 
-    /// <summary>
-    /// Red de seguridad: si en un paso de física la pelota ha cruzado una pared
-    /// (por ir muy rápida), la devuelve al punto de choque y la hace rebotar.
-    /// </summary>
-    void PreventTunneling()
-    {
-        Vector3 delta = rb.position - prevPhysicsPos;
-        float dist = delta.magnitude;
-        if (dist > radius * 0.3f)
-        {
-            Vector3 dir = delta / dist;
-            var hits = Physics.SphereCastAll(prevPhysicsPos, radius * 0.9f, dir, dist, ~0, QueryTriggerInteraction.Ignore);
-            float best = float.MaxValue;
-            RaycastHit bestHit = default;
-            foreach (var h in hits)
-            {
-                if (h.collider == ownCollider || h.distance <= 0f) continue;
-                // ignorar el suelo que tenemos debajo
-                if (Vector3.Dot(h.normal, Vector3.up) > 0.7f) continue;
-                if (h.distance < best) { best = h.distance; bestHit = h; }
-            }
-            if (best < float.MaxValue)
-            {
-                Vector3 safe = prevPhysicsPos + dir * Mathf.Max(0f, best - radius * 0.05f);
-                rb.position = safe;
-                Vector3 v = rb.linearVelocity;
-                Vector3 n = bestHit.normal; n.y = 0f;
-                if (n.sqrMagnitude > 0.0001f && Vector3.Dot(v, n) < 0f)
-                    rb.linearVelocity = Vector3.Reflect(v, n.normalized) * 0.7f;
-            }
-        }
-        prevPhysicsPos = rb.position;
-    }
-
     void ResetToLastShot(float lift)
     {
         rb.isKinematic = false;
@@ -555,7 +516,6 @@ public class MiniGolfShotController : MonoBehaviour
         rb.angularVelocity = Vector3.zero;
         rb.position = lastShotPosition + Vector3.up * lift;
         transform.position = rb.position;
-        prevPhysicsPos = rb.position;
         if (trail != null) { trail.emitting = false; trail.Clear(); }
         isMoving = false;
         isCharging = false;

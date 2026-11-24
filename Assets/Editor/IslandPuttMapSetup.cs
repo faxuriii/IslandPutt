@@ -82,7 +82,7 @@ public static class IslandPuttMapSetup
         var matCesped = GetOrCreateMaterial("Cesped", 0.5f, 0.5f, 0f, PhysicsMaterialCombine.Average, PhysicsMaterialCombine.Minimum);
         var matPared = GetOrCreateMaterial("Pared", 0.05f, 0.05f, 0.75f, PhysicsMaterialCombine.Minimum, PhysicsMaterialCombine.Maximum);
         var matArena = GetOrCreateMaterial("Arena", 1f, 1f, 0f, PhysicsMaterialCombine.Maximum, PhysicsMaterialCombine.Minimum);
-        var matObst = GetOrCreateMaterial("Obstaculo", 0.3f, 0.3f, 0.5f, PhysicsMaterialCombine.Average, PhysicsMaterialCombine.Maximum);
+        var matObst = GetOrCreateMaterial("Obstaculo", 0.05f, 0.05f, 0.75f, PhysicsMaterialCombine.Minimum, PhysicsMaterialCombine.Maximum);
 
         // --- Quitar mapas anteriores (el viejo solo se desactiva)
         Vector3 mapPos = Vector3.zero;

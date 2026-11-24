@@ -58,7 +58,8 @@ public class CameraFollow : MonoBehaviour
     public float multiplicadorRapido = 3f;
 
     float yaw, pitch, yawT, pitchT;
-    float dist, distT, distReal;
+    float dist, distT, alturaOrbita;
+    readonly RaycastHit[] impactos = new RaycastHit[16];
     Vector3 pivot, pivotVel;
     bool libre;
     float shake, fovKick, fovBase = 60f;
@@ -71,7 +72,7 @@ public class CameraFollow : MonoBehaviour
     {
         yaw = yawT = transform.eulerAngles.y;
         pitch = pitchT = inclinacionInicial;
-        dist = distT = distReal = distanciaInicial;
+        dist = distT = distanciaInicial;
         if (target != null) pivot = target.position + Vector3.up * targetHeight;
     }
 
@@ -119,20 +120,44 @@ public class CameraFollow : MonoBehaviour
         if ((objetivo - pivot).sqrMagnitude > 30f * 30f || retrasoSeguir <= 0f) { pivot = objetivo; pivotVel = Vector3.zero; }
         else pivot = Vector3.SmoothDamp(pivot, objetivo, ref pivotVel, retrasoSeguir, Mathf.Infinity, dt);
 
-        Quaternion rot = Quaternion.Euler(pitch, yaw, 0f);
-        Vector3 back = rot * Vector3.back;
-
-        // ---- Paredes: solo si algo tapa de verdad la vista; entra rápido y sale despacio (sin tirones)
-        float objetivoDist = dist;
-        if (evitarParedes && Physics.SphereCast(pivot, radioColision, back, out RaycastHit hit, dist, ~0, QueryTriggerInteraction.Ignore)
-            && hit.distance > 0.5f)
-            objetivoDist = Mathf.Max(distanciaMin * 0.5f, hit.distance - radioColision);
-        distReal = objetivoDist < distReal
-            ? Mathf.Lerp(distReal, objetivoDist, 1f - Mathf.Exp(-25f * dt))
-            : Mathf.Lerp(distReal, objetivoDist, 1f - Mathf.Exp(-3f * dt));
-
-        transform.SetPositionAndRotation(pivot + back * distReal, rot);
+        // Conserva la distancia elegida y eleva la órbita al encontrar una pared.
+        // Al despejarse la vista, recupera suavemente la inclinación del jugador.
+        float angulo = pitch;
+        float alcance = dist;
+        if (evitarParedes)
+        {
+            alcance = AlcanceVisible(angulo);
+            while (alcance < dist && angulo < 89f)
+            {
+                angulo = Mathf.Min(angulo + 5f, 89f);
+                alcance = AlcanceVisible(angulo);
+            }
+        }
+        float descenso = Mathf.MoveTowards(alturaOrbita, angulo, 75f * dt);
+        if (evitarParedes && descenso > angulo && AlcanceVisible(descenso) >= dist)
+        {
+            angulo = descenso;
+            alcance = dist;
+        }
+        alturaOrbita = angulo;
+        var rot = Quaternion.Euler(angulo, yaw, 0f);
+        transform.SetPositionAndRotation(pivot + rot * Vector3.back * alcance, rot);
         Efectos(dt);
+    }
+
+    float AlcanceVisible(float angulo)
+    {
+        Vector3 direccion = Quaternion.Euler(angulo, yaw, 0f) * Vector3.back;
+        int count = Physics.SphereCastNonAlloc(pivot, radioColision, direccion, impactos,
+            dist, Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore);
+        float alcance = dist;
+        for (int i = 0; i < count; i++)
+        {
+            var hit = impactos[i];
+            if (hit.collider.transform.IsChildOf(target)) continue;
+            alcance = Mathf.Min(alcance, Mathf.Max(0.01f, hit.distance - 0.05f));
+        }
+        return alcance;
     }
 
     void Efectos(float dt)
@@ -187,7 +212,7 @@ public class CameraFollow : MonoBehaviour
         Vector3 e = Quaternion.LookRotation(-dir).eulerAngles;
         yaw = yawT = e.y;
         pitch = pitchT = Mathf.Clamp(e.x > 180f ? e.x - 360f : e.x, inclinacionMin, inclinacionMax);
-        dist = distT = distReal = Mathf.Clamp(dir.magnitude, distanciaMin, distanciaMax);
+        dist = distT = Mathf.Clamp(dir.magnitude, distanciaMin, distanciaMax);
         pivot = piv;
         pivotVel = Vector3.zero;
     }
