@@ -1,17 +1,16 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-/// <summary>Entrada con rebote.</summary>
+[RequireComponent(typeof(CanvasGroup))]
 public class Aparecer : MonoBehaviour
 {
-    public float retraso;
+    CanvasGroup grupo;
     float t;
+    void Awake() => grupo = GetComponent<CanvasGroup>();
+    void OnEnable() { t = 0; grupo.alpha = 0; }
     void Update()
     {
-        t += Time.unscaledDeltaTime;
-        float k = Mathf.Clamp01((t - retraso) / 0.5f);
-        float s = k <= 0f ? 0f : (k >= 1f ? 1f : Mathf.Pow(2f, -10f * k) * Mathf.Sin((k * 10f - 0.75f) * (2f * Mathf.PI / 3f)) + 1f);
-        transform.localScale = Vector3.one * s;
-        if (k >= 1f) Destroy(this);
+        if (t >= 1f) return;
+        t = Mathf.Min(1f, t + Time.unscaledDeltaTime / .2f);
+        grupo.alpha = Mathf.SmoothStep(0, 1, t);
     }
 }

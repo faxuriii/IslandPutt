@@ -152,6 +152,92 @@ public class MiniGolfShotController : MonoBehaviour
 
     DesertPauseMenu pauseMenu;
 
+    struct Turno
+    {
+        public Vector3 posicion;
+        public float direccion;
+        public int golpes;
+        public bool terminado;
+    }
+
+    Turno[] jugadores;
+    int jugador;
+    bool tiroPendiente;
+    Vector3 salidaLocal;
+    MeshRenderer modeloBola;
+    Material materialEnEspera;
+    GameObject bolaEnEspera;
+    MaterialPropertyBlock tinte;
+
+    void ActualizarBolas()
+    {
+        if (modeloBola == null)
+        {
+            modeloBola = GetComponentInChildren<MeshRenderer>();
+            tinte = new MaterialPropertyBlock();
+            var malla = modeloBola.GetComponent<MeshFilter>();
+            bolaEnEspera = new GameObject("Bola en espera", typeof(MeshFilter), typeof(MeshRenderer));
+            bolaEnEspera.GetComponent<MeshFilter>().sharedMesh = malla.sharedMesh;
+            materialEnEspera = new Material(Resources.Load<Shader>("IslandPutt/BolaEnEspera"));
+            var visual = bolaEnEspera.GetComponent<MeshRenderer>();
+            visual.sharedMaterial = materialEnEspera;
+            visual.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            visual.receiveShadows = false;
+        }
+        Color color = MapSelector.ColorJugador(jugador);
+        modeloBola.GetPropertyBlock(tinte);
+        tinte.SetColor("_BaseColor", color);
+        tinte.SetColor("baseColorFactor", color);
+        tinte.SetColor("_Color", color);
+        modeloBola.SetPropertyBlock(tinte);
+
+        int otro = 1 - jugador;
+        bolaEnEspera.SetActive(jugadores[otro].golpes > 0 && !jugadores[otro].terminado);
+        var visualTransform = modeloBola.transform;
+        bolaEnEspera.transform.SetPositionAndRotation(jugadores[otro].posicion +
+            (visualTransform.position - transform.position), visualTransform.rotation);
+        bolaEnEspera.transform.localScale = visualTransform.lossyScale;
+        Color espera = MapSelector.ColorJugador(otro);
+        espera.a = .45f;
+        materialEnEspera.color = espera;
+    }
+
+    void IniciarTurnos()
+    {
+        salidaLocal = rb.position;
+        jugadores = new Turno[2];
+        for (int i = 0; i < jugadores.Length; i++)
+        {
+            jugadores[i].posicion = salidaLocal;
+            jugadores[i].direccion = aimYaw;
+        }
+        jugador = 0;
+        tiroPendiente = false;
+        ActualizarBolas();
+        hud.MostrarTurno(jugador);
+    }
+
+    void PasarTurno()
+    {
+        jugadores[jugador].posicion = rb.position;
+        jugadores[jugador].direccion = aimYaw;
+        jugadores[jugador].golpes = strokes;
+        int siguiente = 1 - jugador;
+        if (!jugadores[siguiente].terminado) jugador = siguiente;
+        tiroPendiente = false;
+        lastShotPosition = jugadores[jugador].posicion;
+        aimYaw = jugadores[jugador].direccion;
+        strokes = jugadores[jugador].golpes;
+        canUndoShot = false;
+        Embocada = false;
+        ResetToLastShot(0f);
+        hud.OnReset();
+        hud.CancelCharge();
+        hud.SetGolpes(strokes, false);
+        ActualizarBolas();
+        hud.MostrarTurno(jugador);
+    }
+
     void Awake()
     {
         AplicarAjustesSiHaceFalta();
@@ -199,11 +285,17 @@ public class MiniGolfShotController : MonoBehaviour
     void Start()
     {
         if (salida != null) ColocarEnSalida();
+        if (MapSelector.DosJugadores) IniciarTurnos();
     }
 
     public void ColocarEnSalida()
     {
         Vector3 p = salida != null ? salida.position + Vector3.up * (radius * 1.05f) : lastShotPosition;
+        if (salida != null && Physics.Raycast(p, Vector3.down, out var suelo, radius * 2f,
+            Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore) && suelo.collider != ownCollider &&
+            suelo.normal.y > .6f)
+            p.y = suelo.point.y + radius + .03f;
+
         rb.isKinematic = false;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
@@ -248,6 +340,22 @@ public class MiniGolfShotController : MonoBehaviour
         string resultado = hud.OnHole(strokes, hoyo.position, radius);
 
         yield return new WaitForSeconds(tiempoTrasHoyo);
+        if (jugadores != null)
+        {
+            jugadores[jugador].terminado = true;
+            jugadores[jugador].golpes = strokes;
+            if (!jugadores[1 - jugador].terminado)
+            {
+                PasarTurno();
+                yield break;
+            }
+            int primero = jugadores[0].golpes;
+            int segundo = jugadores[1].golpes;
+            resultado = primero == segundo ? "¡EMPATE!" : "GANA " + MapSelector.NombreJugador(primero < segundo ? 0 : 1);
+            if (pauseMenu != null) pauseMenu.ShowResults(resultado, primero, par, segundo);
+            else ReiniciarHoyo();
+            yield break;
+        }
         if (pauseMenu != null) pauseMenu.ShowResults(resultado, strokes, par);
         else ReiniciarHoyo();
     }
@@ -259,7 +367,9 @@ public class MiniGolfShotController : MonoBehaviour
         strokes = 0;
         if (hud != null) hud.OnReset();
         if (trail != null) { trail.emitting = false; trail.Clear(); }
+        if (jugadores != null) lastShotPosition = salidaLocal;
         ColocarEnSalida();
+        if (jugadores != null) IniciarTurnos();
     }
 
     public void CancelChargeForPause()
@@ -272,7 +382,7 @@ public class MiniGolfShotController : MonoBehaviour
 
     void Update()
     {
-        if (pauseMenu != null && pauseMenu.CapturesGameplay) return;
+        if (TransicionEscena.Activa || (pauseMenu != null && pauseMenu.CapturesGameplay)) return;
         if (!Embocada && Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame)
             ReiniciarHoyo();
 
@@ -288,6 +398,7 @@ public class MiniGolfShotController : MonoBehaviour
             ResetToLastShot(0f);
             aimYaw = lastShotYaw;
             canUndoShot = false;
+            tiroPendiente = false;
             strokes--;
             hud.CancelCharge();
             hud.SetGolpes(strokes, true);
@@ -298,6 +409,12 @@ public class MiniGolfShotController : MonoBehaviour
         // ¿Se ha caído del mapa?
         if (transform.position.y < alturaMuerte)
             ResetToLastShot(radius * 0.2f);
+
+        if (tiroPendiente && !isMoving)
+        {
+            PasarTurno();
+            return;
+        }
 
         if (isMoving)
         {
@@ -349,6 +466,8 @@ public class MiniGolfShotController : MonoBehaviour
                        ground.collider.sharedMaterial.name.Contains("Arena");
         float pendiente = Vector3.Angle(ground.normal, Vector3.up);
         bool llano = pendiente < pendienteMaxParada;
+        // Durante el primer paso, deja que el impulso se traduzca en movimiento antes de evaluar la parada.
+        if (shotTimer <= dt) return;
 
         // Velocidad sobre el plano del suelo
         Vector3 v = rb.linearVelocity;
@@ -486,6 +605,7 @@ public class MiniGolfShotController : MonoBehaviour
         lastShotYaw = aimYaw;
         canUndoShot = true;
         strokes++;
+        tiroPendiente = jugadores != null;
 
         rb.WakeUp();
         float speed = Mathf.Lerp(velocidadTiroMin, velocidadTiroMax, Mathf.Pow(p, curvaFuerza));
@@ -637,6 +757,8 @@ public class MiniGolfShotController : MonoBehaviour
 
     void OnDestroy()
     {
+        if (bolaEnEspera != null) Destroy(bolaEnEspera);
+        if (materialEnEspera != null) Destroy(materialEnEspera);
         if (arrow != null) Destroy(arrow.gameObject);
     }
 }

@@ -49,6 +49,7 @@ public class DesertPauseMenu : MonoBehaviour
         Paint(overlay, new Color32(22, 14, 10, 176)).raycastTarget = true;
         var panel = Box(overlay, "Panel de pausa", 0, 0, 720, 620);
         settingsPanel = panel.gameObject;
+        settingsPanel.AddComponent<Aparecer>();
         Paint(panel, Brown);
         Paint(Box(panel, "Borde superior", 0, 305, 720, 10), Sand);
         Label(Box(panel, "Mapa", 0, 252, 620, 40), "ISLA DESIERTO", 25, Sand);
@@ -68,6 +69,7 @@ public class DesertPauseMenu : MonoBehaviour
 
         var guide = Box(overlay, "Guía de controles", 0, 0, 1000, 790);
         controls = guide.gameObject;
+        controls.AddComponent<Aparecer>();
         Paint(guide, Brown);
         Paint(Box(guide, "Borde superior", 0, 390, 1000, 10), Sand);
         Label(Box(guide, "Título", 0, 326, 880, 75), "Controles", 62, Cream);
@@ -105,7 +107,7 @@ public class DesertPauseMenu : MonoBehaviour
 
     void Update()
     {
-        if (showingResults || Keyboard.current?.escapeKey.wasPressedThisFrame != true) return;
+        if (TransicionEscena.Activa || showingResults || Keyboard.current?.escapeKey.wasPressedThisFrame != true) return;
         if (!paused) Pause();
         else if (controls.activeSelf) ShowSettings();
         else Resume();
@@ -139,7 +141,7 @@ public class DesertPauseMenu : MonoBehaviour
         EventSystem.current?.SetSelectedGameObject(null);
     }
 
-    public void ShowResults(string result, int strokes, int par)
+    public void ShowResults(string result, int strokes, int par, int? segundo = null)
     {
         if (showingResults) return;
         showingResults = true;
@@ -152,33 +154,52 @@ public class DesertPauseMenu : MonoBehaviour
         overlay.gameObject.SetActive(true);
 
         var card = Box(overlay, "Tarjeta de resultados", 0, 0, 936, 536);
+        card.gameObject.AddComponent<Aparecer>();
         Paint(card, Brown);
         Paint(Box(card, "Borde superior", 0, 263, 936, 10), Sand);
         Label(Box(card, "Campo", 0, 208, 864, 44), "ISLA DESIERTO  ·  HOYO 1 COMPLETADO", 28, Sand);
-        Label(Box(card, "Resultado", 0, 117, 864, 98), result, 68, Cream);
+        Label(Box(card, "Resultado", 0, 117, 864, 98), result, segundo.HasValue ? 46 : 68, Cream).richText = false;
 
-        int difference = strokes - par;
-        ResultStat(card, -288, "GOLPES", strokes.ToString());
-        ResultStat(card, 0, "PAR DEL HOYO", par.ToString());
-        ResultStat(card, 288, "RESPECTO AL PAR", difference.ToString("+0;-0;0"));
+        if (segundo.HasValue)
+        {
+            PlayerResult(card, -218, 0, strokes, par);
+            PlayerResult(card, 218, 1, segundo.Value, par);
+        }
+        else
+        {
+            ResultStat(card, -288, "GOLPES", strokes.ToString());
+            ResultStat(card, 0, "PAR DEL HOYO", par.ToString());
+            ResultStat(card, 288, "RESPECTO AL PAR", (strokes - par).ToString("+0;-0;0"));
+        }
 
         var replay = MakeButton(Box(card, "Repetir", -288, -182, 264, 76),
             "Repetir", Sand, Brown, () =>
             {
                 if (!paused) return;
-                RestoreGameplay();
-                SceneManager.LoadScene(gameObject.scene.name);
+                TransicionEscena.Cargar(gameObject.scene.name);
             });
         MakeButton(Box(card, "Cambiar mapa", 0, -182, 264, 76),
             "Cambiar mapa", Clay, Cream, () =>
             {
                 if (!paused) return;
-                RestoreGameplay();
                 MainMenu.CargarSelector();
             });
         MakeButton(Box(card, "Menú principal", 288, -182, 264, 76),
             "Menú principal", Clay, Cream, ExitToMainMenu);
         Select(replay);
+    }
+
+    void PlayerResult(Transform parent, float x, int player, int strokes, int par)
+    {
+        var tile = Box(parent, "Jugador " + (player + 1), x, -26, 408, 156);
+        Paint(tile, Clay);
+        var color = MapSelector.ColorJugador(player);
+        Paint(Box(tile, "Color de bola", 0, 75, 408, 6), color);
+        Label(Box(tile, "Jugador", 0, 45, 392, 42), MapSelector.NombreJugador(player), 27, Cream).richText = false;
+        string score = strokes == 1 ? "1 GOLPE" : strokes + " GOLPES";
+        Label(Box(tile, "Golpes", 0, 0, 392, 52), score, 42, Cream);
+        string difference = (strokes - par).ToString("+0;-0;0");
+        Label(Box(tile, "Par", 0, -49, 392, 35), $"PAR {par}   ·   {difference} RESPECTO AL PAR", 21, Sand);
     }
 
     void ResultStat(Transform parent, float x, string title, string value)
@@ -192,8 +213,7 @@ public class DesertPauseMenu : MonoBehaviour
     void ExitToMainMenu()
     {
         if (!paused) return;
-        RestoreGameplay();
-        SceneManager.LoadScene("MainMenu");
+        TransicionEscena.Cargar("MainMenu");
     }
 
     void RestoreGameplay()
@@ -294,6 +314,7 @@ public class DesertPauseMenu : MonoBehaviour
         colors.selectedColor = Color.white;
         colors.normalColor = new Color(0.88f, 0.88f, 0.88f);
         button.colors = colors;
+        HoverPop.Instalar(button);
         button.onClick.AddListener(click);
         Label(Box(rect, "Texto", 0, 0, rect.sizeDelta.x - 20, rect.sizeDelta.y), title, 30, text);
         return button;

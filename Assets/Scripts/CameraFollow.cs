@@ -27,9 +27,9 @@ public class CameraFollow : MonoBehaviour
 
     [Header("Giro")]
     [Tooltip("Grados por píxel con el clic derecho")]
-    public float sensibilidad = 0.18f;
+    public float sensibilidad = 0.31f;
     [Tooltip("Grados por segundo con A/D y W/S")]
-    public float velocidadTeclas = 100f;
+    public float velocidadTeclas = 135f;
     [Tooltip("Suavidad del giro (más alto = responde más rápido)")]
     public float respuestaGiro = 14f;
     public float inclinacionInicial = 28f;

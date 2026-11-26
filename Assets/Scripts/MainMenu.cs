@@ -20,11 +20,14 @@ public class MainMenu : MonoBehaviour
     public static void CargarSelector()
     {
         abrirSelectorAlEntrar = true;
-        SceneManager.LoadScene("MainMenu");
+        TransicionEscena.Cargar("MainMenu");
     }
 
     void Start()
     {
+        foreach (var boton in GetComponentsInChildren<Button>(true)) HoverPop.Instalar(boton);
+        mainMenu.AddComponent<Aparecer>();
+        settingsMenu.AddComponent<Aparecer>();
         music.onValueChanged.AddListener(UpdateMusicLabel);
         UpdateMusicLabel(music.value);
         if (!abrirSelectorAlEntrar) return;

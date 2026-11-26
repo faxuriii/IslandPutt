@@ -132,6 +132,26 @@ public class GolfHUD : MonoBehaviour
         return titulo;
     }
 
+    TextMeshProUGUI turnoTexto;
+    public void MostrarTurno(int jugador)
+    {
+        if (turnoTexto == null)
+        {
+            var anchor = new Vector2(0, 1);
+            var panel = Rect("Turno", canvas.transform, anchor, anchor, anchor,
+                new Vector2(48, -40), new Vector2(430, 72));
+            panel.gameObject.AddComponent<Image>().color = Oscuro;
+            turnoTexto = Texto("Jugador", panel, "", 34, Color.white, TextAlignmentOptions.Center);
+            Fill(turnoTexto.rectTransform, Vector2.zero, Vector2.one);
+        }
+        turnoTexto.text = "TURNO · " + MapSelector.NombreJugador(jugador);
+        turnoTexto.richText = false;
+        turnoTexto.enableAutoSizing = true;
+        turnoTexto.fontSizeMin = 20;
+        turnoTexto.fontSizeMax = 34;
+        turnoTexto.color = Color.Lerp(MapSelector.ColorJugador(jugador), Color.white, .3f);
+    }
+
     public void OnReset()
     {
         SetGolpes(0, false);
