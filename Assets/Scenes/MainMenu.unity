@@ -154,10 +154,10 @@ RectTransform:
   - {fileID: 1634146308}
   m_Father: {fileID: 575685603}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -277, y: 153}
-  m_SizeDelta: {x: 220, y: 90}
+  m_AnchorMin: {x: 0.72, y: 0.5}
+  m_AnchorMax: {x: 0.72, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -107}
+  m_SizeDelta: {x: 216, y: 87}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &173104021
 MonoBehaviour:
@@ -384,8 +384,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 29, y: -5}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -20, y: -9}
+  m_SizeDelta: {x: 150, y: 53}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &265327811
 MonoBehaviour:
@@ -401,15 +401,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'SETTINGS
-
-'
+  m_text: "AJUSTES"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a6396d6013edd554c8b33189a58c79fe, type: 2}
   m_sharedMaterial: {fileID: 1912105292190579447, guid: a6396d6013edd554c8b33189a58c79fe, type: 2}
@@ -436,14 +434,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21
-  m_fontSizeBase: 21
+  m_fontSize: 25
+  m_fontSizeBase: 25
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -538,11 +536,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
+  m_ReferenceResolution: {x: 940, y: 529}
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
@@ -608,6 +606,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MainMenu
   settingsMenu: {fileID: 1585766172}
   mainMenu: {fileID: 575685602}
+  music: {fileID: 1816063799}
+  musicLabel: {fileID: 1982398645}
+  playButton: {fileID: 1561608440}
+  settingsButton: {fileID: 1934035688}
 --- !u!1 &267791093
 GameObject:
   m_ObjectHideFlags: 0
@@ -640,10 +642,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1585766173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0.0000014305115, y: -120}
-  m_SizeDelta: {x: 224.7057, y: 50}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 112}
+  m_SizeDelta: {x: 470, y: 65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &267791095
 MonoBehaviour:
@@ -659,13 +661,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SETTINGS
+  m_text: "AJUSTES"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a6396d6013edd554c8b33189a58c79fe, type: 2}
   m_sharedMaterial: {fileID: 1912105292190579447, guid: a6396d6013edd554c8b33189a58c79fe, type: 2}
@@ -692,8 +694,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
-  m_fontSizeBase: 40
+  m_fontSize: 48
+  m_fontSizeBase: 48
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1086,7 +1088,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0.5, b: 0.000000029802322, a: 1}
+  m_Color: {r: 0.22, g: 0.48, b: 0.11, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1143,10 +1145,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1585766173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 940, y: 529}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &820775836
 MonoBehaviour:
@@ -1218,10 +1220,10 @@ RectTransform:
   - {fileID: 879622911}
   m_Father: {fileID: 1585766173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 124}
-  m_SizeDelta: {x: 160, y: 72.1552}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -102}
+  m_SizeDelta: {x: 192, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &857688285
 MonoBehaviour:
@@ -1292,15 +1294,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 7729115520025158685, guid: 920f0242ead530843ade8e77e914f3d0, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1371,10 +1373,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 857688284}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0.0000038146973, y: 38.687653}
-  m_SizeDelta: {x: 208.8823, y: 77.375305}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -16, y: -7}
+  m_SizeDelta: {x: 140, y: 47}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &879622912
 MonoBehaviour:
@@ -1390,13 +1392,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: BACK
+  m_text: "VOLVER"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a6396d6013edd554c8b33189a58c79fe, type: 2}
   m_sharedMaterial: {fileID: 1912105292190579447, guid: a6396d6013edd554c8b33189a58c79fe, type: 2}
@@ -1405,8 +1407,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -1423,8 +1425,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
-  m_fontSizeBase: 50
+  m_fontSize: 22
+  m_fontSizeBase: 22
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1537,7 +1539,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventSystem
-  m_FirstSelected: {fileID: 0}
+  m_FirstSelected: {fileID: 1561608438}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &1048981781
@@ -1626,10 +1628,10 @@ RectTransform:
   - {fileID: 1848296922}
   m_Father: {fileID: 575685603}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -277, y: -153}
-  m_SizeDelta: {x: 220, y: 90}
+  m_AnchorMin: {x: 0.72, y: 0.5}
+  m_AnchorMax: {x: 0.72, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 118}
+  m_SizeDelta: {x: 288, y: 116}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1561608440
 MonoBehaviour:
@@ -1861,8 +1863,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 30, y: -5}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -18, y: -8}
+  m_SizeDelta: {x: 138, y: 47}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1634146309
 MonoBehaviour:
@@ -1878,13 +1880,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Quit
+  m_text: "SALIR"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a6396d6013edd554c8b33189a58c79fe, type: 2}
   m_sharedMaterial: {fileID: 1912105292190579447, guid: a6396d6013edd554c8b33189a58c79fe, type: 2}
@@ -1911,14 +1913,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21
-  m_fontSizeBase: 21
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -2163,8 +2165,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.0000019073486, y: -9.363907}
-  m_SizeDelta: {x: 222.1859, y: 18.7278}
+  m_AnchoredPosition: {x: 0, y: -16}
+  m_SizeDelta: {x: 320, y: 37}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1816063799
 MonoBehaviour:
@@ -2249,10 +2251,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 575685603}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000074387, y: -0.000016212}
-  m_SizeDelta: {x: 940, y: 529}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1823228138
 MonoBehaviour:
@@ -2323,8 +2325,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -15, y: -5}
-  m_SizeDelta: {x: 111.217, y: 50}
+  m_AnchoredPosition: {x: -22, y: -10}
+  m_SizeDelta: {x: 182, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1848296923
 MonoBehaviour:
@@ -2340,15 +2342,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'PLAY
-
-'
+  m_text: "JUGAR"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a6396d6013edd554c8b33189a58c79fe, type: 2}
   m_sharedMaterial: {fileID: 1912105292190579447, guid: a6396d6013edd554c8b33189a58c79fe, type: 2}
@@ -2375,14 +2375,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21
-  m_fontSizeBase: 21
+  m_fontSize: 34
+  m_fontSizeBase: 34
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -2463,10 +2463,10 @@ RectTransform:
   - {fileID: 265327810}
   m_Father: {fileID: 575685603}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -277, y: 0}
-  m_SizeDelta: {x: 220, y: 90}
+  m_AnchorMin: {x: 0.72, y: 0.5}
+  m_AnchorMax: {x: 0.72, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -4}
+  m_SizeDelta: {x: 244, y: 98}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1934035688
 MonoBehaviour:
@@ -2618,8 +2618,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -8, y: 23}
-  m_SizeDelta: {x: 200, y: 31.272}
+  m_AnchoredPosition: {x: 0, y: 29}
+  m_SizeDelta: {x: 420, y: 46}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1982398645
 MonoBehaviour:
@@ -2635,13 +2635,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: MUSIC
+  m_text: "MÚSICA"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: a6396d6013edd554c8b33189a58c79fe, type: 2}
   m_sharedMaterial: {fileID: 1912105292190579447, guid: a6396d6013edd554c8b33189a58c79fe, type: 2}
@@ -2668,14 +2668,14 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 25
+  m_fontSizeBase: 25
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0

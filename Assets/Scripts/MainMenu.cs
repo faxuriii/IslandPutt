@@ -1,4 +1,8 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
@@ -6,6 +10,10 @@ public class MainMenu : MonoBehaviour
     public GameObject settingsMenu;
     public GameObject mainMenu;
 
+    [SerializeField] Slider music;
+    [SerializeField] TMP_Text musicLabel;
+    [SerializeField] Button playButton;
+    [SerializeField] Button settingsButton;
     MapSelector selector;
     static bool abrirSelectorAlEntrar;
 
@@ -17,21 +25,36 @@ public class MainMenu : MonoBehaviour
 
     void Start()
     {
+        music.onValueChanged.AddListener(UpdateMusicLabel);
+        UpdateMusicLabel(music.value);
         if (!abrirSelectorAlEntrar) return;
         abrirSelectorAlEntrar = false;
         PlayGame();
+    }
+
+    void UpdateMusicLabel(float value)
+    {
+        musicLabel.text = $"MÚSICA   {Mathf.RoundToInt(value * 100f)}%";
+    }
+
+    void Update()
+    {
+        if (settingsMenu.activeSelf && Keyboard.current?.escapeKey.wasPressedThisFrame == true)
+            OpenMainMenu();
     }
 
     public void OpenSettingsMenu()
     {
         settingsMenu.SetActive(true);
         mainMenu.SetActive(false);
+        EventSystem.current?.SetSelectedGameObject(music.gameObject);
     }
 
     public void OpenMainMenu()
     {
         settingsMenu.SetActive(false);
         mainMenu.SetActive(true);
+        EventSystem.current?.SetSelectedGameObject(settingsButton.gameObject);
     }
 
     public void QuitGame()
@@ -56,5 +79,6 @@ public class MainMenu : MonoBehaviour
     public void VolverDesdeSelector()
     {
         if (mainMenu != null) mainMenu.SetActive(true);
+        EventSystem.current?.SetSelectedGameObject(playButton.gameObject);
     }
 }
