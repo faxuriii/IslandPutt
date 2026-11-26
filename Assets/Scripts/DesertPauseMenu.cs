@@ -21,6 +21,7 @@ public class DesertPauseMenu : MonoBehaviour
     Button resumeButton, controlsButton, backButton;
     float previousTimeScale;
     int resumedFrame = -1;
+    string NombreMapa => gameObject.scene.name == "IslandSnow" ? "ISLA NEVADA" : "ISLA DESIERTO";
     bool paused;
     bool showingResults;
 
@@ -52,7 +53,7 @@ public class DesertPauseMenu : MonoBehaviour
         settingsPanel.AddComponent<Aparecer>();
         Paint(panel, Brown);
         Paint(Box(panel, "Borde superior", 0, 305, 720, 10), Sand);
-        Label(Box(panel, "Mapa", 0, 252, 620, 40), "ISLA DESIERTO", 25, Sand);
+        Label(Box(panel, "Mapa", 0, 252, 620, 40), NombreMapa, 25, Sand);
         Label(Box(panel, "Título", 0, 193, 620, 70), "Pausa", 65, Cream);
 
         var options = panel;
@@ -141,7 +142,7 @@ public class DesertPauseMenu : MonoBehaviour
         EventSystem.current?.SetSelectedGameObject(null);
     }
 
-    public void ShowResults(string result, int strokes, int par, int? segundo = null)
+    public void ShowResults(string result, int strokes, int? segundo = null)
     {
         if (showingResults) return;
         showingResults = true;
@@ -157,19 +158,17 @@ public class DesertPauseMenu : MonoBehaviour
         card.gameObject.AddComponent<Aparecer>();
         Paint(card, Brown);
         Paint(Box(card, "Borde superior", 0, 263, 936, 10), Sand);
-        Label(Box(card, "Campo", 0, 208, 864, 44), "ISLA DESIERTO  ·  HOYO 1 COMPLETADO", 28, Sand);
+        Label(Box(card, "Campo", 0, 208, 864, 44), NombreMapa, 28, Sand);
         Label(Box(card, "Resultado", 0, 117, 864, 98), result, segundo.HasValue ? 46 : 68, Cream).richText = false;
 
         if (segundo.HasValue)
         {
-            PlayerResult(card, -218, 0, strokes, par);
-            PlayerResult(card, 218, 1, segundo.Value, par);
+            PlayerResult(card, -218, 0, strokes);
+            PlayerResult(card, 218, 1, segundo.Value);
         }
         else
         {
-            ResultStat(card, -288, "GOLPES", strokes.ToString());
-            ResultStat(card, 0, "PAR DEL HOYO", par.ToString());
-            ResultStat(card, 288, "RESPECTO AL PAR", (strokes - par).ToString("+0;-0;0"));
+            ResultStat(card, 0, "TOQUES", strokes.ToString());
         }
 
         var replay = MakeButton(Box(card, "Repetir", -288, -182, 264, 76),
@@ -189,17 +188,15 @@ public class DesertPauseMenu : MonoBehaviour
         Select(replay);
     }
 
-    void PlayerResult(Transform parent, float x, int player, int strokes, int par)
+    void PlayerResult(Transform parent, float x, int player, int strokes)
     {
         var tile = Box(parent, "Jugador " + (player + 1), x, -26, 408, 156);
         Paint(tile, Clay);
         var color = MapSelector.ColorJugador(player);
         Paint(Box(tile, "Color de bola", 0, 75, 408, 6), color);
-        Label(Box(tile, "Jugador", 0, 45, 392, 42), MapSelector.NombreJugador(player), 27, Cream).richText = false;
-        string score = strokes == 1 ? "1 GOLPE" : strokes + " GOLPES";
-        Label(Box(tile, "Golpes", 0, 0, 392, 52), score, 42, Cream);
-        string difference = (strokes - par).ToString("+0;-0;0");
-        Label(Box(tile, "Par", 0, -49, 392, 35), $"PAR {par}   ·   {difference} RESPECTO AL PAR", 21, Sand);
+        Label(Box(tile, "Jugador", 0, 31, 392, 42), MapSelector.NombreJugador(player), 27, Cream).richText = false;
+        string score = strokes == 1 ? "1 TOQUE" : strokes + " TOQUES";
+        Label(Box(tile, "Golpes", 0, -26, 392, 52), score, 42, Cream);
     }
 
     void ResultStat(Transform parent, float x, string title, string value)

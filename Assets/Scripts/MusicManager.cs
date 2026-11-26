@@ -28,6 +28,7 @@ public class MusicManager : MonoBehaviour
     {
         switch (escena)
         {
+            case "IslandSnow": return "IslandPutt/Musica/Nieve";
             case "IslandDesert": return "IslandPutt/Musica/Desierto";
             default: return "IslandPutt/Musica/Menu"; // MainMenu y cualquier otra pantalla
         }

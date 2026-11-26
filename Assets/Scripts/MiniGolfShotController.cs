@@ -163,6 +163,7 @@ public class MiniGolfShotController : MonoBehaviour
     Turno[] jugadores;
     int jugador;
     bool tiroPendiente;
+    [System.NonSerialized] public SnowCourse circuitoNieve;
     Vector3 salidaLocal;
     MeshRenderer modeloBola;
     Material materialEnEspera;
@@ -272,7 +273,7 @@ public class MiniGolfShotController : MonoBehaviour
         hud = gameObject.AddComponent<GolfHUD>();
         hud.Init(uiFont, powerGradient, par);
 
-        if (gameObject.scene.name == "IslandDesert")
+        if (gameObject.scene.name == "IslandDesert" || gameObject.scene.name == "IslandSnow")
         {
             var pauseRoot = new GameObject("IslandDesert Pause Menu", typeof(RectTransform));
             UnityEngine.SceneManagement.SceneManager.MoveGameObjectToScene(pauseRoot, gameObject.scene);
@@ -352,11 +353,11 @@ public class MiniGolfShotController : MonoBehaviour
             int primero = jugadores[0].golpes;
             int segundo = jugadores[1].golpes;
             resultado = primero == segundo ? "¡EMPATE!" : "GANA " + MapSelector.NombreJugador(primero < segundo ? 0 : 1);
-            if (pauseMenu != null) pauseMenu.ShowResults(resultado, primero, par, segundo);
+            if (pauseMenu != null) pauseMenu.ShowResults(resultado, primero, segundo);
             else ReiniciarHoyo();
             yield break;
         }
-        if (pauseMenu != null) pauseMenu.ShowResults(resultado, strokes, par);
+        if (pauseMenu != null) pauseMenu.ShowResults(resultado, strokes);
         else ReiniciarHoyo();
     }
 
@@ -408,7 +409,9 @@ public class MiniGolfShotController : MonoBehaviour
 
         // ¿Se ha caído del mapa?
         if (transform.position.y < alturaMuerte)
-            ResetToLastShot(radius * 0.2f);
+            ResetToLastShot(radius * .2f);
+        else if (isMoving && circuitoNieve != null && !circuitoNieve.SobreCircuito(rb.position, radius))
+            ResetToLastShot(0f);
 
         if (tiroPendiente && !isMoving)
         {

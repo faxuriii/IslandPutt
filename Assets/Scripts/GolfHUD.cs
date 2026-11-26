@@ -25,7 +25,7 @@ public class GolfHUD : MonoBehaviour
     // --- UI
     RectTransform powerPanel, powerFill, golpesPill, mensaje, subMensaje;
     Image powerFillImg, golpesImg;
-    TextMeshProUGUI powerPct, powerLabel, golpesTxt, parTxt, hoyoTxt, mensajeTxt, subMensajeTxt;
+    TextMeshProUGUI powerPct, powerLabel, golpesTxt, mensajeTxt, subMensajeTxt;
     CanvasGroup powerGroup;
     Canvas canvas;
 
@@ -204,7 +204,7 @@ public class GolfHUD : MonoBehaviour
 
     public void SetGolpes(int g, bool animar)
     {
-        golpesTxt.text = "GOLPES  " + g;
+        golpesTxt.text = "TOQUES  " + g;
         golpesImg.color = ColorGolpes(g);
         if (animar) Punch(golpesPill, 0.45f);
     }
@@ -262,20 +262,9 @@ public class GolfHUD : MonoBehaviour
             m.gameObject.AddComponent<Image>().color = new Color(1, 1, 1, 0.25f);
         }
 
-        // ---- Píldoras: HOYO · PAR · GOLPES
-        var hoyo = Rect("Hoyo", root.transform, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(60, 50), new Vector2(150, 76));
-        hoyo.gameObject.AddComponent<Image>().color = Oscuro;
-        hoyoTxt = Texto("T", hoyo, "HOYO 1", 32, Color.white, TextAlignmentOptions.Center);
-        Fill(hoyoTxt.rectTransform, Vector2.zero, Vector2.one);
-
-        var parR = Rect("Par", root.transform, Vector2.zero, Vector2.zero, Vector2.zero, new Vector2(222, 50), new Vector2(130, 76));
-        parR.gameObject.AddComponent<Image>().color = Verde;
-        parTxt = Texto("T", parR, "PAR " + par, 32, Color.white, TextAlignmentOptions.Center);
-        Fill(parTxt.rectTransform, Vector2.zero, Vector2.one);
-
-        golpesPill = Rect("Golpes", root.transform, Vector2.zero, Vector2.zero, new Vector2(0.5f, 0.5f), new Vector2(364 + 100, 50 + 38), new Vector2(200, 76));
+        golpesPill = Rect("Golpes", root.transform, Vector2.zero, Vector2.zero, new Vector2(0.5f, 0.5f), new Vector2(180, 88), new Vector2(240, 76));
         golpesImg = golpesPill.gameObject.AddComponent<Image>();
-        golpesTxt = Texto("T", golpesPill, "GOLPES  0", 32, Color.white, TextAlignmentOptions.Center);
+        golpesTxt = Texto("T", golpesPill, "TOQUES  0", 32, Color.white, TextAlignmentOptions.Center);
         Fill(golpesTxt.rectTransform, Vector2.zero, Vector2.one);
 
         // ---- Mensaje grande central

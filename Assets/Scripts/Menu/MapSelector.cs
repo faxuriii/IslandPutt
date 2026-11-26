@@ -18,7 +18,6 @@ public class MapSelector : MonoBehaviour
     public class Mapa
     {
         public string nombre;
-        public string descripcion;
         public string escena;
         [Tooltip("Ruta dentro de Resources, sin extensión")]
         public string miniatura;
@@ -27,10 +26,10 @@ public class MapSelector : MonoBehaviour
 
     public Mapa[] mapas =
     {
-        new Mapa { nombre = "ISLA DESIERTO", descripcion = "1 HOYO  ·  PAR 3", escena = "IslandDesert",
+        new Mapa { nombre = "ISLA DESIERTO", escena = "IslandDesert",
                    miniatura = "IslandPutt/MapaDesierto", disponible = true },
-        new Mapa { nombre = "PRÓXIMAMENTE", descripcion = "EN CONSTRUCCIÓN", escena = "",
-                   miniatura = "IslandPutt/MapaProximamente", disponible = false },
+        new Mapa { nombre = "ISLA NEVADA", escena = "IslandSnow",
+                   miniatura = "IslandPutt/MapaNieve", disponible = true },
     };
 
     static readonly Color Marron = new Color(0.42f, 0.22f, 0.08f);
@@ -308,11 +307,9 @@ public class MapSelector : MonoBehaviour
         }
 
         // Nombre y descripción
-        var nom = Rect("Nombre", card, new Vector2(0, 0.1f), new Vector2(1, 0.27f), Vector2.zero, Vector2.zero);
+        var nom = Rect("Nombre", card, Vector2.zero, new Vector2(1, 0.27f), Vector2.zero, Vector2.zero);
         var nt = Texto(nom, mapa.nombre, 46, Color.white);
         nt.gameObject.AddComponent<Shadow>().effectColor = new Color(0, 0, 0, 0.5f);
-        var des = Rect("Descripcion", card, new Vector2(0, 0f), new Vector2(1, 0.12f), Vector2.zero, Vector2.zero);
-        Texto(des, mapa.descripcion, 26, new Color(1f, 0.92f, 0.75f));
 
         if (!mapa.disponible)
         {
